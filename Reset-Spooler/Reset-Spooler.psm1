@@ -22,7 +22,7 @@
 function Reset-Spooler {
     [CmdletBinding()]
     param (
-        # Имя компьютера или список компьютеров
+        # Имя компьютера или список имен компьютеров
         [Parameter(Mandatory=$true,
         ValueFromPipeLine = $true)]
         [String[]]$ComputerName
