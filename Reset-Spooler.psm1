@@ -10,7 +10,7 @@
 .INPUTS
     System.String
 .NOTES
-    Версия 0.1.2
+    Версия 0.1.3
     24.11.2020
 #>
 function Reset-Spooler {
