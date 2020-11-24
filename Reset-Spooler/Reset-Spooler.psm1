@@ -30,6 +30,7 @@ function Reset-Spooler {
     
     begin {
         Write-Verbose "Начало работы командлета"
+        Set-StrictMode –Version 2.0
     }
     
     process {
