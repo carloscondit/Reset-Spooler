@@ -2,8 +2,9 @@
     [CmdletBinding()]
     param (
         # Имя компьютера или список компьютеров
-        [Parameter(ValueFromPipeLine = $true)]
-        [String[]]$ComputerName="$env:computername"
+        [Parameter(Mandatory=$true,
+        ValueFromPipeLine = $true)]
+        [String[]]$ComputerName
     )
     
     begin {
@@ -11,15 +12,19 @@
     }
     
     process {
+        Write-Verbose "Устанавливаем связь с компьютером $ComputerName"
         $Session = New-PSSession -ComputerName $ComputerName
         $ScriptBlock = {
             $ServiceName = 'Spooler'
-            Stop-Service -Name $ServiceName  
+            Stop-Service -Name $ServiceName
             Remove-Item "C:\Windows\System32\spool\PRINTERS\*" -Recurse -Force
             Start-Service -Name $ServiceName 
         }
-
+        
+        Write-Verbose "Выполняем скриптоблок на компьютере $ComputerName"
         Invoke-Command -ComputerName $ComputerName -ScriptBlock $ScriptBlock
+
+        Write-Verbose "Прерываем связь с компьютером $ComputerName"
         Remove-PSSession -Session $Session
 
     }
