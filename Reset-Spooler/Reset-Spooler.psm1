@@ -16,7 +16,7 @@
 .INPUTS
     System.String
 .NOTES
-    Версия 0.1.2
+    Версия 0.1.3
     25.11.2020
 #>
 function Reset-Spooler {
@@ -24,12 +24,14 @@ function Reset-Spooler {
     param (
         # Имя компьютера или список имен компьютеров
         [Parameter(Mandatory=$true,
-        ValueFromPipeLine = $true)]
+        ValueFromPipeLine = $true,
+        Position = 0,
+        HelpMessage = "Введите одно или более имен компьютеров.")]
         [String[]]$ComputerName
     )
     
     begin {
-        Write-Verbose "Начало работы командлета"
+        Write-Verbose "Начало работы функции"
         Set-StrictMode –Version 2.0
     }
     
@@ -53,6 +55,6 @@ function Reset-Spooler {
     }
     
     end {
-        Write-Verbose "Конец работы командлета" 
+        Write-Verbose "Конец работы функции" 
     }
 }
