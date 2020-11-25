@@ -16,8 +16,8 @@
 .INPUTS
     System.String
 .NOTES
-    Версия 0.1.3
-    24.11.2020
+    Версия 0.1.2
+    25.11.2020
 #>
 function Reset-Spooler {
     [CmdletBinding()]
@@ -39,7 +39,8 @@ function Reset-Spooler {
         $ScriptBlock = {
             $ServiceName = 'Spooler'
             Stop-Service -Name $ServiceName
-            Remove-Item "C:\Windows\System32\spool\PRINTERS\*" -Recurse -Force
+            $SpoolerFolder = "$($(Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Print\Printers').DefaultSpoolDirectory)"
+            Remove-Item "$SpoolerFolder\*" -Recurse -Force
             Start-Service -Name $ServiceName 
         }
         
