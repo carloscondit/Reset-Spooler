@@ -34,11 +34,6 @@ function Reset-Spooler {
     }
     
     process {
-        if (!$ComputerName) {
-            $ComputerName = $env:computername
-        }
-        Write-Verbose "Устанавливаем связь с компьютером $ComputerName"
-        $Session = New-PSSession -ComputerName $ComputerName
         $ScriptBlock = {
             $ServiceName = 'Spooler'
             Stop-Service -Name $ServiceName
@@ -46,14 +41,22 @@ function Reset-Spooler {
             Remove-Item "$SpoolerFolder\*" -Recurse -Force
             Start-Service -Name $ServiceName 
         }
+        if ($ComputerName) {
+            Write-Verbose "Устанавливаем связь с компьютером $ComputerName"
+            $Session = New-PSSession -ComputerName $ComputerName
         
-        Write-Verbose "Выполняем скриптоблок на компьютере $ComputerName"
-        Invoke-Command -ComputerName $ComputerName -ScriptBlock $ScriptBlock
+            Write-Verbose "Выполняем скриптоблок на компьютере $ComputerName"
+            Invoke-Command -Session $Session -ScriptBlock $ScriptBlock
 
-        Write-Verbose "Прерываем связь с компьютером $ComputerName"
-        Remove-PSSession -Session $Session
+            Write-Verbose "Прерываем связь с компьютером $ComputerName"
+            Remove-PSSession -Session $Session
+        } #If
+        else {
+            Write-Verbose 'Выполняем скриптоблок на локальном компьютере'
+            Invoke-Command -ScriptBlock $ScriptBlock
+        } #else
 
-    }
+    } #Process
     
     end {
         Write-Verbose "Конец работы функции" 
