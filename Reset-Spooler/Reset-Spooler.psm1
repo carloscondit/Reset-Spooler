@@ -16,17 +16,15 @@
 .INPUTS
     System.String
 .NOTES
-    Версия 0.1.3
-    25.11.2020
+    Версия 0.1.4
+    29.11.2020
 #>
 function Reset-Spooler {
     [CmdletBinding()]
     param (
         # Имя компьютера или список имен компьютеров
-        [Parameter(Mandatory=$true,
-        ValueFromPipeLine = $true,
-        Position = 0,
-        HelpMessage = "Введите одно или более имен компьютеров.")]
+        [Parameter(ValueFromPipeLine = $true)]
+        [Alias("CN", "MachineName")]
         [String[]]$ComputerName
     )
     
@@ -36,6 +34,9 @@ function Reset-Spooler {
     }
     
     process {
+        if (!$ComputerName) {
+            $ComputerName = $env:computername
+        }
         Write-Verbose "Устанавливаем связь с компьютером $ComputerName"
         $Session = New-PSSession -ComputerName $ComputerName
         $ScriptBlock = {
